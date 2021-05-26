@@ -1,6 +1,9 @@
+import express from 'express';
+import mongoose from 'mongoose';
+
 import PostStructure from '../models/postStructure';
 
-export const getPosts = async (req, res) => {
+const getPosts = async (req, res) => {
     try {
         const postMessages = await PostStructure.find();
         console.log(postMessages);
@@ -10,9 +13,9 @@ export const getPosts = async (req, res) => {
     } catch (error){
         res.status(404).json({message: error.message});
     }
-}
+};
 
-export const createPosts = async (req, res) => {
+const createPost = async (req, res) => {
     const post = req.body;
 
     const newPost = new PostStructure(post);
@@ -26,3 +29,18 @@ export const createPosts = async (req, res) => {
     }
 };
 
+const updatePost = async (req, res) => {
+    const post = req.body;
+
+    const newPost = new PostStructure(post);
+
+    try {
+        await newPost.save();
+
+        res.status(201).json(newPost);
+    } catch (error) {
+        res.status(409).json({ message: error.message});
+    }
+};
+
+export {getPosts, createPost, updatePost};
